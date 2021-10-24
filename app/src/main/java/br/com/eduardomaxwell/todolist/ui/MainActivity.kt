@@ -4,59 +4,89 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.core.view.isEmpty
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.ActivityMainBinding
-import br.com.eduardomaxwell.todolist.datasource.TaskDatasource
-import br.com.eduardomaxwell.todolist.ui.AddTaskActivity
+import br.com.eduardomaxwell.todolist.model.Task
+import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
+import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 
 class MainActivity : AppCompatActivity() {
+
+    private val newTaskActivityRequestCode = 1
     private lateinit var binding: ActivityMainBinding
-    private val taskAdapter by lazy { TaskAdapter() }
+    private val taskAdapter = TaskAdapter()
+    private val taskViewModel: TaskViewModel by viewModels {
+        TaskViewModelFactory((application as TaskApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setupRecycler()
         setListeners()
+
+        taskViewModel.allTasks.observe(this, { tasks ->
+            tasks?.let {
+                if (it.isEmpty()) {
+                    binding.includeEmpty.emptyState.visibility = View.VISIBLE
+                } else {
+                    binding.includeEmpty.emptyState.visibility = View.GONE
+                }
+                taskAdapter.submitList(it)
+            }
+        })
     }
 
     private fun setListeners() {
         binding.fabAddTask.setOnClickListener {
-            val intent = AddTaskActivity.getStartIntent(this@MainActivity)
-            this@MainActivity.startActivityForResult(intent, AddTaskActivity.CREATE_NEW_TASK)
+            val intent = Intent(this@MainActivity, AddTaskActivity::class.java)
+            startActivityForResult(intent, newTaskActivityRequestCode)
         }
 
         taskAdapter.listenerEdit = {
             val intent = AddTaskActivity.getStartIntent(this@MainActivity)
-            intent.putExtra(AddTaskActivity.TASK_ID, it.id)
             this@MainActivity.startActivityForResult(intent, AddTaskActivity.CREATE_NEW_TASK)
             setupRecycler()
         }
 
         taskAdapter.listenerDelete = {
-            TaskDatasource.deleteTask(it)
+            taskViewModel.delete(it)
             setupRecycler()
         }
     }
 
     private fun setupRecycler() {
+
         binding.rvTasks.run {
             setHasFixedSize(true)
             adapter = taskAdapter
-
-            binding.includeEmpty.emptyState.visibility = if (isEmpty()) View.VISIBLE else View.GONE
-
-            taskAdapter.submitList(TaskDatasource.getList())
+            layoutManager = LinearLayoutManager(this@MainActivity)
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AddTaskActivity.CREATE_NEW_TASK && resultCode == Activity.RESULT_OK) {
-            setupRecycler()
+
+        if (requestCode == newTaskActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            data?.getStringExtra(AddTaskActivity.EXTRA_REPLY)?.let { reply ->
+                val task = Task(reply)
+                taskViewModel.insert(task = task)
+            }
+
+
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Empty not saved",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }

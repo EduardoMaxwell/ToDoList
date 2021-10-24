@@ -29,9 +29,10 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
         private val title = binding.tvTitle
         private val dateTime = binding.tvDateTime
         private val more = binding.ivMore
+
         fun bind(task: Task) {
             title.text = task.title
-            dateTime.text = "${task.date} ${task.hour}"
+//            dateTime.text = "${task.date} ${task.hour}"
 
             more.setOnClickListener {
                 showPopUp(task)
@@ -59,7 +60,7 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
                 oldItem: Task,
                 newItem: Task
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(

@@ -4,10 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import br.com.eduardomaxwell.todolist.databinding.ActivityAddTaskBinding
-import br.com.eduardomaxwell.todolist.datasource.TaskDatasource
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
 import br.com.eduardomaxwell.todolist.extensions.text
 import br.com.eduardomaxwell.todolist.model.Task
@@ -18,20 +17,11 @@ import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddTaskBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        if (intent.hasExtra(TASK_ID)) {
-            val taskId = intent.getIntExtra(TASK_ID, 0)
-            TaskDatasource.findById(taskId)?.let {
-                binding.edtTitle.text = it.title
-                binding.edtDescription.text = it.description
-                binding.edtDate.text = it.date
-                binding.edtHour.text = it.hour
-            }
-        }
 
         setListeners()
     }
@@ -66,17 +56,20 @@ class AddTaskActivity : AppCompatActivity() {
         }
 
         binding.btnCreateTask.setOnClickListener {
-            val task = Task(
-                title = binding.edtTitle.text,
-                description = binding.edtDescription.text,
-                date = binding.edtDate.text,
-                hour = binding.edtHour.text,
-                id = intent.getIntExtra(TASK_ID, 0)
-            )
-            TaskDatasource.insertTask(task)
 
-            setResult(Activity.RESULT_OK)
+            val replyIntent = Intent()
+            if (TextUtils.isEmpty(binding.edtTitle.text) && TextUtils.isEmpty(binding.edtDescription.text)) {
+                setResult(Activity.RESULT_CANCELED, replyIntent)
 
+            } else {
+
+                val task = binding.edtTitle.text.toString()
+
+                replyIntent.putExtra(EXTRA_REPLY, task)
+                replyIntent.putExtra(EXTRA_REPLY, task)
+
+                setResult(Activity.RESULT_OK, replyIntent)
+            }
             finish()
         }
 
@@ -87,6 +80,7 @@ class AddTaskActivity : AppCompatActivity() {
 
 
     companion object {
+        const val EXTRA_REPLY = "br.com.eduardomaxwell.todolist.model.Task"
         const val CREATE_NEW_TASK = 1000
         const val TASK_ID = "task_id"
 
