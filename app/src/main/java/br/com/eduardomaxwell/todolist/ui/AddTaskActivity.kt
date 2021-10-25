@@ -1,6 +1,9 @@
 package br.com.eduardomaxwell.todolist.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,14 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.eduardomaxwell.todolist.databinding.ActivityAddTaskBinding
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
 import br.com.eduardomaxwell.todolist.extensions.text
-import br.com.eduardomaxwell.todolist.model.Task
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddTaskBinding
+    var calendar: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +27,29 @@ class AddTaskActivity : AppCompatActivity() {
         setListeners()
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun setListeners() {
-        binding.edtDate.editText?.setOnClickListener {
 
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
+
+        binding.edtDate.editText?.setOnClickListener {
+            val dateSetListener =
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                    calendar.set(Calendar.YEAR, year)
+                    calendar.set(Calendar.MONTH, monthOfYear)
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    binding.edtDate.text = calendar.time.dateFormat()
+                }
+
+            DatePickerDialog(
+                this@AddTaskActivity,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+            ).show()
+
+/*            val datePicker = MaterialDatePicker.Builder.datePicker().build()
             datePicker.addOnPositiveButtonClickListener { date ->
                 val timeZone = TimeZone.getDefault()
                 val offSet = timeZone.getOffset(Date().time) * -1
@@ -37,11 +57,26 @@ class AddTaskActivity : AppCompatActivity() {
                 binding.edtDate.text = Date(date + offSet).dateFormat()
             }
 
-            datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
+            datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")*/
         }
 
         binding.edtHour.editText?.setOnClickListener {
-            val timePicker = MaterialTimePicker.Builder()
+            val timeSetListener =
+                TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+                    calendar.set(Calendar.HOUR_OF_DAY, hour)
+                    calendar.set(Calendar.MINUTE, minute)
+
+                    binding.edtHour.text = SimpleDateFormat("HH:mm").format(calendar.time)
+                }
+            TimePickerDialog(
+                this@AddTaskActivity,
+                timeSetListener,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+            ).show()
+
+/*            val timePicker = MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .build()
             timePicker.addOnPositiveButtonClickListener {
@@ -52,7 +87,7 @@ class AddTaskActivity : AppCompatActivity() {
                 binding.edtHour.text = "$hour:$minute"
             }
 
-            timePicker.show(supportFragmentManager, "TIME_PICKER_TAG")
+            timePicker.show(supportFragmentManager, "TIME_PICKER_TAG")*/
         }
 
         binding.btnCreateTask.setOnClickListener {
@@ -63,7 +98,7 @@ class AddTaskActivity : AppCompatActivity() {
 
             } else {
 
-                val task = binding.edtTitle.text.toString()
+                val task = binding.edtTitle.text
 
                 replyIntent.putExtra(EXTRA_REPLY, task)
                 replyIntent.putExtra(EXTRA_REPLY, task)
@@ -77,7 +112,6 @@ class AddTaskActivity : AppCompatActivity() {
             finish()
         }
     }
-
 
     companion object {
         const val EXTRA_REPLY = "br.com.eduardomaxwell.todolist.model.Task"

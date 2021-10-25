@@ -10,6 +10,9 @@ fun Date.dateFormat(): String {
     return SimpleDateFormat("dd/MM/yyyy", locale).format(this)
 }
 
+fun Calendar.dateFormat(): String{
+    return SimpleDateFormat("dd/MM/yyyy", locale).format(this)
+}
 var TextInputLayout.text: String
     get() = editText?.text.toString()
     set(value) {
