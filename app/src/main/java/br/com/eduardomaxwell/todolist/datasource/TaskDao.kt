@@ -10,6 +10,9 @@ interface TaskDao {
     @Query("SELECT * FROM tb_task ORDER BY title ASC")
     fun getAll(): Flow<List<Task>>
 
+    @Query("SELECT * FROM tb_task WHERE title = :id")
+    fun getTask(id: String): Flow<Task>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(task: Task)
 

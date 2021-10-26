@@ -29,6 +29,7 @@ abstract class TaskRoomDatabase : RoomDatabase() {
                     "task_databe"
                 )
                     .addCallback(TaskDatabaseCallback(scope))
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
@@ -53,15 +54,6 @@ abstract class TaskRoomDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(taskDao: TaskDao) {
             taskDao.deleteAll()
-
-            var task = Task(
-                "Correr"
-            )
-            taskDao.insert(task)
-            var task2 = Task(
-                "Passear com o dog"
-            )
-            taskDao.insert(task2)
 
         }
     }
