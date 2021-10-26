@@ -1,5 +1,6 @@
 package br.com.eduardomaxwell.todolist.ui
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -30,10 +31,10 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
         private val dateTime = binding.tvDateTime
         private val more = binding.ivMore
 
+        @SuppressLint("SetTextI18n")
         fun bind(task: Task) {
-            title.text = task.title
-//            dateTime.text = "${task.date} ${task.hour}"
-
+            title.text = task.taskTitle
+            dateTime.text = "${task.taskDate} ${task.taskHour}"
             more.setOnClickListener {
                 showPopUp(task)
             }
@@ -60,7 +61,7 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
                 oldItem: Task,
                 newItem: Task
             ): Boolean {
-                return oldItem.title == newItem.title
+                return oldItem.taskTitle == newItem.taskTitle
             }
 
             override fun areContentsTheSame(
