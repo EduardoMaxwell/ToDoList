@@ -8,9 +8,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.ActivityMainBinding
-import br.com.eduardomaxwell.todolist.model.Task
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 
@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
         taskViewModel.allTasks.observe(this, { tasks ->
             tasks?.let {
                 if (it.isEmpty()) {
-                    binding.includeEmpty.emptyState.visibility = View.VISIBLE
+//                    binding.includeEmpty.emptyState.visibility = View.VISIBLE
                 } else {
-                    binding.includeEmpty.emptyState.visibility = View.GONE
+//                    binding.includeEmpty.emptyState.visibility = View.GONE
                 }
                 taskAdapter.submitList(it)
             }
@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListeners() {
         binding.fabAddTask.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddTaskActivity::class.java)
-            startActivityForResult(intent, newTaskActivityRequestCode)
+            val intent = AddTaskActivity.getStartIntent(this@MainActivity)
+            this@MainActivity.startActivityForResult(intent, newTaskActivityRequestCode)
         }
 
         taskAdapter.listenerEdit = {
@@ -59,6 +59,17 @@ class MainActivity : AppCompatActivity() {
             taskViewModel.delete(it)
             setupRecycler()
         }
+
+        binding.rvTasks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && binding.fabAddTask.visibility == View.VISIBLE) {
+                    binding.fabAddTask.hide()
+                } else if (dy < 0 && binding.fabAddTask.visibility != View.VISIBLE) {
+                    binding.fabAddTask.show()
+                }
+            }
+        })
     }
 
     private fun setupRecycler() {
@@ -75,11 +86,9 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == newTaskActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(AddTaskActivity.EXTRA_REPLY)?.let { reply ->
-                val task = Task(reply)
-                taskViewModel.insert(task = task)
+            data?.getStringExtra(AddTaskActivity.EXTRA_TITLE)?.let { reply ->
+                taskViewModel.insert(reply)
             }
-
 
         } else {
             Toast.makeText(
