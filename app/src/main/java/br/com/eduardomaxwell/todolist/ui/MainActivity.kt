@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.ActivityMainBinding
+import br.com.eduardomaxwell.todolist.model.Task
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,9 +36,9 @@ class MainActivity : AppCompatActivity() {
         taskViewModel.allTasks.observe(this, { tasks ->
             tasks?.let {
                 if (it.isEmpty()) {
-//                    binding.includeEmpty.emptyState.visibility = View.VISIBLE
+                    binding.emptyRv.emptyState.visibility = View.VISIBLE
                 } else {
-//                    binding.includeEmpty.emptyState.visibility = View.GONE
+                    binding.emptyRv.emptyState.visibility = View.GONE
                 }
                 taskAdapter.submitList(it)
             }
@@ -51,8 +53,8 @@ class MainActivity : AppCompatActivity() {
 
         taskAdapter.listenerEdit = {
             val intent = AddTaskActivity.getStartIntent(this@MainActivity)
+            intent.putExtra("idTask", it)
             this@MainActivity.startActivityForResult(intent, AddTaskActivity.CREATE_NEW_TASK)
-            setupRecycler()
         }
 
         taskAdapter.listenerDelete = {
@@ -86,8 +88,13 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == newTaskActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(AddTaskActivity.EXTRA_TITLE)?.let { reply ->
-                taskViewModel.insert(reply)
+            data?.getStringExtra(AddTaskActivity.EXTRA_TASK)?.let {
+
+                val gson = Gson()
+
+                val task = gson.fromJson(it, Task::class.java)
+                println(it)
+                taskViewModel.insert(task)
             }
 
         } else {

@@ -13,8 +13,8 @@ import br.com.eduardomaxwell.todolist.model.Task
 
 class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
-    var listenerEdit  : (Task) -> Unit = {}
-    var listenerDelete  : (Task) -> Unit = {}
+    var listenerEdit: (Task) -> Unit = {}
+    var listenerDelete: (Task) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,11 +29,13 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
 
         private val title = binding.tvTitle
         private val dateTime = binding.tvDateTime
+        private val description = binding.tvDescription
         private val more = binding.ivMore
 
         @SuppressLint("SetTextI18n")
         fun bind(task: Task) {
             title.text = task.taskTitle
+            description.text = task.taskDescription
             dateTime.text = "${task.taskDate} ${task.taskHour}"
             more.setOnClickListener {
                 showPopUp(task)
@@ -44,7 +46,7 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
             val popupMenu = PopupMenu(more.context, more)
             popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener {
-                when(it.itemId){
+                when (it.itemId) {
                     R.id.actionEdit -> listenerEdit(task)
                     R.id.actionDelete -> listenerDelete(task)
                 }

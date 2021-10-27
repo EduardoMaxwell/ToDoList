@@ -1,14 +1,17 @@
 package br.com.eduardomaxwell.todolist.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
+import kotlinx.android.parcel.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(tableName = "tb_task")
-class Task (
+@Parcelize
+class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "title")
@@ -16,7 +19,7 @@ class Task (
     @ColumnInfo(name = "description")
     val taskDescription: String? = null,
     @ColumnInfo(name = "date")
-    val taskDate: String? = Calendar.getInstance().time.dateFormat(),
+    val taskDate: String,
     @ColumnInfo(name = "hour")
-    val taskHour: String? = SimpleDateFormat("HH:mm").format(Calendar.getInstance().time)
-)
+    val taskHour: String
+) : Parcelable

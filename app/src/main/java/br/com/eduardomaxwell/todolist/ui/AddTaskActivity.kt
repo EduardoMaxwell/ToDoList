@@ -1,6 +1,5 @@
 package br.com.eduardomaxwell.todolist.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.eduardomaxwell.todolist.databinding.ActivityAddTaskBinding
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
 import br.com.eduardomaxwell.todolist.extensions.text
+import br.com.eduardomaxwell.todolist.model.Task
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,86 +26,21 @@ class AddTaskActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setListeners()
+        intent.getStringExtra("idTask")
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun setListeners() {
 
-
         binding.edtDate.editText?.setOnClickListener {
-            val dateSetListener =
-                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                    calendar.set(Calendar.YEAR, year)
-                    calendar.set(Calendar.MONTH, monthOfYear)
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    binding.edtDate.text = calendar.time.dateFormat()
-                }
-
-            DatePickerDialog(
-                this@AddTaskActivity,
-                dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-            ).show()
-
-/*            val datePicker = MaterialDatePicker.Builder.datePicker().build()
-            datePicker.addOnPositiveButtonClickListener { date ->
-                val timeZone = TimeZone.getDefault()
-                val offSet = timeZone.getOffset(Date().time) * -1
-
-                binding.edtDate.text = Date(date + offSet).dateFormat()
-            }
-
-            datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")*/
+            setDateEdit()
         }
 
         binding.edtHour.editText?.setOnClickListener {
-            val timeSetListener =
-                TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                    calendar.set(Calendar.HOUR_OF_DAY, hour)
-                    calendar.set(Calendar.MINUTE, minute)
-
-                    binding.edtHour.text = SimpleDateFormat("HH:mm").format(calendar.time)
-                }
-            TimePickerDialog(
-                this@AddTaskActivity,
-                timeSetListener,
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                true
-            ).show()
-
-/*            val timePicker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .build()
-            timePicker.addOnPositiveButtonClickListener {
-                val hour = if (timePicker.hour in 0..9) "0${timePicker.hour}" else timePicker.hour
-                val minute =
-                    if (timePicker.minute in 0..9) "0${timePicker.minute}" else timePicker.minute
-
-                binding.edtHour.text = "$hour:$minute"
-            }
-
-            timePicker.show(supportFragmentManager, "TIME_PICKER_TAG")*/
+            setHourEdit()
         }
 
         binding.btnCreateTask.setOnClickListener {
-
-            val replyIntent = Intent()
-            if (TextUtils.isEmpty(binding.edtTitle.text) && TextUtils.isEmpty(binding.edtDescription.text)) {
-                setResult(Activity.RESULT_CANCELED, replyIntent)
-
-            } else {
-
-                val task = binding.edtTitle.text
-
-                replyIntent.putExtra(EXTRA_REPLY, task)
-                replyIntent.putExtra(EXTRA_REPLY, task)
-
-                setResult(Activity.RESULT_OK, replyIntent)
-            }
+            createNewTask()
             finish()
         }
 
@@ -113,8 +49,75 @@ class AddTaskActivity : AppCompatActivity() {
         }
     }
 
+    private fun createNewTask() {
+        val replyIntent = Intent()
+
+
+
+        if (TextUtils.isEmpty(binding.edtTitle.text) && TextUtils.isEmpty(binding.edtDescription.text)) {
+
+            setResult(RESULT_CANCELED, replyIntent)
+
+        } else {
+
+            val taskTitle = binding.edtTitle.text
+            val taskDescription = binding.edtDescription.text
+            val taskDate = binding.edtDate.text
+            val taskHour = binding.edtHour.text
+
+            val task = Task(
+                taskTitle = taskTitle,
+                taskDescription = taskDescription,
+                taskDate = taskDate,
+                taskHour = taskHour
+            )
+
+            val gson = Gson()
+            val passableTask = gson.toJson(task)
+
+            replyIntent.putExtra(EXTRA_TASK, passableTask)
+            setResult(RESULT_OK, replyIntent)
+        }
+    }
+
+    private fun setHourEdit() {
+        val timeSetListener =
+            TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+
+                binding.edtHour.text = SimpleDateFormat("HH:mm").format(calendar.time)
+            }
+        TimePickerDialog(
+            this@AddTaskActivity,
+            timeSetListener,
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
+    }
+
+    private fun setDateEdit() {
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, monthOfYear)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                binding.edtDate.text = calendar.time.dateFormat()
+            }
+
+        DatePickerDialog(
+            this@AddTaskActivity,
+            dateSetListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH),
+        ).show()
+    }
+
     companion object {
-        const val EXTRA_REPLY = "br.com.eduardomaxwell.todolist.model.Task"
+        const val EXTRA_TASK = "task_extra"
         const val CREATE_NEW_TASK = 1000
         const val TASK_ID = "task_id"
 
