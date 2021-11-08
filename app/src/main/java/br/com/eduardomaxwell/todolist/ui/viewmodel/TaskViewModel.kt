@@ -9,6 +9,10 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     val allTasks: LiveData<List<Task>> = repository.allTask.asLiveData()
 
+    fun retrieveTask(id: Int): LiveData<Task> {
+        return getTaskFromDb(id)
+    }
+
     fun insert(task: Task) = viewModelScope.launch {
         repository.insertTask(task)
     }
@@ -19,6 +23,10 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     fun update(task: Task) = viewModelScope.launch {
         repository.update(task)
+    }
+
+    private fun getTaskFromDb(id: Int): LiveData<Task> {
+        return repository.getTask(id)
     }
 
 }

@@ -4,10 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.eduardomaxwell.todolist.extensions.dateFormat
-import kotlinx.android.parcel.Parcelize
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "tb_task")
 @Parcelize
@@ -17,9 +14,9 @@ class Task(
     @ColumnInfo(name = "title")
     val taskTitle: String,
     @ColumnInfo(name = "description")
-    val taskDescription: String? = null,
+    val taskDescription: String,
     @ColumnInfo(name = "date")
-    val taskDate: String,
+    val taskDate: String? = null,
     @ColumnInfo(name = "hour")
-    val taskHour: String
+    val taskHour: String? = null
 ) : Parcelable
