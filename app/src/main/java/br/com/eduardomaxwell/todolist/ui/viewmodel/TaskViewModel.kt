@@ -18,6 +18,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         }
         return true
     }
+
     fun addNewTask(
         taskTitle: String,
         taskDescription: String,
@@ -39,27 +40,31 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         update(updatedTask)
     }
 
+    fun deleteTask(task: Task) {
+        delete(task)
+    }
 
 
     fun retrieveTask(id: Int): LiveData<Task> {
         return getTaskFromDb(id)
     }
 
-    fun insert(task: Task) = viewModelScope.launch {
+    private fun insert(task: Task) = viewModelScope.launch {
         repository.insertTask(task)
     }
 
-    fun delete(task: Task) = viewModelScope.launch {
+    private fun delete(task: Task) = viewModelScope.launch {
         repository.delete(task)
     }
 
-    fun update(task: Task) = viewModelScope.launch {
+    private fun update(task: Task) = viewModelScope.launch {
         repository.update(task)
     }
 
     private fun getTaskFromDb(id: Int): LiveData<Task> {
         return repository.getTask(id)
     }
+
     private fun getNewTask(
         taskTitle: String,
         taskDescription: String,
