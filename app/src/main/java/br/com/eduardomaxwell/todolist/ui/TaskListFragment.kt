@@ -5,17 +5,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.eduardomaxwell.todolist.R
+import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.FragmentTaskListBinding
+import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
+import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 
 class TaskListFragment : Fragment() {
 
+    private val viewModel: TaskViewModel by activityViewModels {
+        TaskViewModelFactory(
+            (activity?.application as TaskApplication).repository
+        )
+    }
+
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,4 +32,32 @@ class TaskListFragment : Fragment() {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = TaskAdapter {
+            val action =
+                TaskListFragmentDirections.actionTaskListFragmentToTaskDetailFragment(it.id)
+            this.findNavController().navigate(action)
+        }
+
+        binding.rvTasks.layoutManager = LinearLayoutManager(this.context)
+        binding.rvTasks.adapter = adapter
+
+        viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
+            tasks.let {
+                adapter.submitList(it)
+            }
+        }
+
+        binding.fabAddTask.setOnClickListener {
+            val action =
+                TaskListFragmentDirections.actionTaskListFragmentToAddTaskFragment(
+                    getString(R.string.add_fragment_title)
+                )
+            this.findNavController().navigate(action)
+        }
+    }
+
 }
