@@ -50,6 +50,7 @@ class AddTaskFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val id = navigationArgs.taskId
         if (id > 0) {
+            binding.btnCreateTask.text = getString(R.string.btn_txt_update_task)
             viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { taskSelected ->
                 task = taskSelected
                 bind(task)

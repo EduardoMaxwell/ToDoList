@@ -18,7 +18,9 @@
     <string name="title_label_detail">Title:  </string>
     <string name="description_label_detail">Description:  </string>
 
-    <string name="txt_create_task">Create task</string>
+    <string name="btn_txt_create_task">Create task</string>
+    <string name="btn_txt_update_task">Update task</string>
+
     <string name="txt_btn_delete">Delete</string>
     <string name="toolbarTitle">Create task</string>
     <string name="menu_edit">Edit</string>
