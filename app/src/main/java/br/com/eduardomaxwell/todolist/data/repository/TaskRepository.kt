@@ -1,10 +1,10 @@
-package br.com.eduardomaxwell.todolist.repository
+package br.com.eduardomaxwell.todolist.data.repository
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import br.com.eduardomaxwell.todolist.datasource.TaskDao
-import br.com.eduardomaxwell.todolist.model.Task
+import br.com.eduardomaxwell.todolist.data.datasource.TaskDao
+import br.com.eduardomaxwell.todolist.data.model.Task
 import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val dao: TaskDao) {

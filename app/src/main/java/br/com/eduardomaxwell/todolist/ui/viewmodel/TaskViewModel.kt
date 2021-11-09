@@ -1,8 +1,8 @@
 package br.com.eduardomaxwell.todolist.ui.viewmodel
 
 import androidx.lifecycle.*
-import br.com.eduardomaxwell.todolist.model.Task
-import br.com.eduardomaxwell.todolist.repository.TaskRepository
+import br.com.eduardomaxwell.todolist.data.model.Task
+import br.com.eduardomaxwell.todolist.data.repository.TaskRepository
 import kotlinx.coroutines.launch
 
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {

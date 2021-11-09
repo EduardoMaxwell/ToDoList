@@ -1,7 +1,7 @@
-package br.com.eduardomaxwell.todolist.datasource
+package br.com.eduardomaxwell.todolist.data.datasource
 
 import androidx.room.*
-import br.com.eduardomaxwell.todolist.model.Task
+import br.com.eduardomaxwell.todolist.data.model.Task
 import kotlinx.coroutines.flow.Flow
 
 @Dao

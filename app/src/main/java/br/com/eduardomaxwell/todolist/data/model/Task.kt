@@ -1,4 +1,4 @@
-package br.com.eduardomaxwell.todolist.model
+package br.com.eduardomaxwell.todolist.data.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
