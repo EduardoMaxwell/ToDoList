@@ -1,11 +1,11 @@
-package br.com.eduardomaxwell.todolist.datasource
+package br.com.eduardomaxwell.todolist.data.datasource
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import br.com.eduardomaxwell.todolist.model.Task
+import br.com.eduardomaxwell.todolist.data.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

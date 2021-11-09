@@ -9,52 +9,41 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.databinding.ItemTaskBinding
-import br.com.eduardomaxwell.todolist.model.Task
+import br.com.eduardomaxwell.todolist.data.model.Task
 
-class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
-
-    var listenerEdit: (Task) -> Unit = {}
-    var listenerDelete: (Task) -> Unit = {}
+class TaskAdapter(private val onTaskClicked: (Task) -> Unit) :
+    ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TaskViewHolder(binding)
+        return TaskViewHolder(
+            ItemTaskBinding.inflate(
+                LayoutInflater.from(
+                    parent.context
+                )
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val currentTask = getItem(position)
+        holder.itemView.setOnClickListener {
+            onTaskClicked(currentTask)
+        }
+        holder.bind(currentTask)
     }
 
-    inner class TaskViewHolder(binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TaskViewHolder(binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val title = binding.tvTitle
         private val dateTime = binding.tvDateTime
         private val description = binding.tvDescription
-        private val more = binding.ivMore
 
         @SuppressLint("SetTextI18n")
         fun bind(task: Task) {
             title.text = task.taskTitle
             description.text = task.taskDescription
             dateTime.text = "${task.taskDate} ${task.taskHour}"
-            more.setOnClickListener {
-                showPopUp(task)
-            }
         }
-
-        private fun showPopUp(task: Task) {
-            val popupMenu = PopupMenu(more.context, more)
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.actionEdit -> listenerEdit(task)
-                    R.id.actionDelete -> listenerDelete(task)
-                }
-                return@setOnMenuItemClickListener true
-            }
-            popupMenu.show()
-        }
-
     }
 
     companion object {
@@ -63,14 +52,14 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK)
                 oldItem: Task,
                 newItem: Task
             ): Boolean {
-                return oldItem.taskTitle == newItem.taskTitle
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
                 oldItem: Task,
                 newItem: Task
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
         }
     }
