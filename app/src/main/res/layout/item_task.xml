@@ -8,7 +8,6 @@
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +20,7 @@
             android:textColor="@color/teal_700"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/ivMore"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -35,7 +34,7 @@
             android:singleLine="true"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@id/ivMore"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
             tools:text="It means all 15 It means all 15It means all 15It means all 15 " />
@@ -49,15 +48,6 @@
             app:layout_constraintStart_toStartOf="@id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvDescription"
             tools:text="01/11/2021 18:00" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivMore"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
