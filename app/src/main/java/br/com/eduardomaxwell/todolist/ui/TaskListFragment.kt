@@ -43,9 +43,11 @@ class TaskListFragment : Fragment() {
         }
 
         setUpRecyclerView(adapter)
+        setListeners()
 
+    }
 
-
+    private fun setListeners() {
         binding.fabAddTask.setOnClickListener {
             val action =
                 TaskListFragmentDirections.actionTaskListFragmentToAddTaskFragment(
