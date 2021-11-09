@@ -7,10 +7,21 @@
     android:layout_gravity="center"
     android:layout_margin="16dp">
 
+    <TextView
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/txt_empty_tasks"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/icEmpty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/icEmpty"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_height="270dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

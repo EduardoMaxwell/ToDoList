@@ -42,14 +42,9 @@ class TaskListFragment : Fragment() {
             this.findNavController().navigate(action)
         }
 
-        binding.rvTasks.layoutManager = LinearLayoutManager(this.context)
-        binding.rvTasks.adapter = adapter
+        setUpRecyclerView(adapter)
 
-        viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
-            tasks.let {
-                adapter.submitList(it)
-            }
-        }
+
 
         binding.fabAddTask.setOnClickListener {
             val action =
@@ -57,6 +52,24 @@ class TaskListFragment : Fragment() {
                     getString(R.string.add_fragment_title)
                 )
             this.findNavController().navigate(action)
+        }
+    }
+
+    private fun setUpRecyclerView(adapter: TaskAdapter) {
+        binding.rvTasks.layoutManager = LinearLayoutManager(this.context)
+        binding.rvTasks.adapter = adapter
+
+        viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
+            tasks.let {
+                if (tasks.isNotEmpty()) {
+                    binding.empty.emptyState.visibility = View.GONE
+                    binding.rvTasks.visibility = View.VISIBLE
+                } else {
+                    binding.empty.emptyState.visibility = View.VISIBLE
+                    binding.rvTasks.visibility = View.GONE
+                }
+                adapter.submitList(it)
+            }
         }
     }
 
