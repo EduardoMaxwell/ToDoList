@@ -1,108 +1,27 @@
 package br.com.eduardomaxwell.todolist.ui
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import br.com.eduardomaxwell.todolist.TaskApplication
-import br.com.eduardomaxwell.todolist.databinding.ActivityMainBinding
-import br.com.eduardomaxwell.todolist.model.Task
-import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
-import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
-import com.google.gson.Gson
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import br.com.eduardomaxwell.todolist.R
 
-class MainActivity : AppCompatActivity() {
-
-    private val newTaskActivityRequestCode = 1
-    private lateinit var binding: ActivityMainBinding
-    private val taskAdapter = TaskAdapter()
-    private val taskViewModel: TaskViewModel by viewModels {
-        TaskViewModelFactory((application as TaskApplication).repository)
-    }
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setupRecycler()
-        setListeners()
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        taskViewModel.allTasks.observe(this, { tasks ->
-            tasks?.let {
-                if (it.isEmpty()) {
-                    binding.emptyRv.emptyState.visibility = View.VISIBLE
-                } else {
-                    binding.emptyRv.emptyState.visibility = View.GONE
-                }
-                taskAdapter.submitList(it)
-            }
-        })
+        navController = navHostFragment.navController
+
+//        setupActionBarWithNavController(this, navController)
     }
 
-    private fun setListeners() {
-        binding.fabAddTask.setOnClickListener {
-            val intent = AddTaskActivity.getStartIntent(this@MainActivity)
-            this@MainActivity.startActivityForResult(intent, newTaskActivityRequestCode)
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
 
-        taskAdapter.listenerEdit = {
-            val intent = AddTaskActivity.getStartIntent(this@MainActivity)
-            intent.putExtra("idTask", it)
-            this@MainActivity.startActivityForResult(intent, AddTaskActivity.CREATE_NEW_TASK)
-        }
-
-        taskAdapter.listenerDelete = {
-            taskViewModel.delete(it)
-            setupRecycler()
-        }
-
-        binding.rvTasks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0 && binding.fabAddTask.visibility == View.VISIBLE) {
-                    binding.fabAddTask.hide()
-                } else if (dy < 0 && binding.fabAddTask.visibility != View.VISIBLE) {
-                    binding.fabAddTask.show()
-                }
-            }
-        })
-    }
-
-    private fun setupRecycler() {
-
-        binding.rvTasks.run {
-            setHasFixedSize(true)
-            adapter = taskAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-        }
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == newTaskActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(AddTaskActivity.EXTRA_TASK)?.let {
-
-                val gson = Gson()
-
-                val task = gson.fromJson(it, Task::class.java)
-                println(it)
-                taskViewModel.insert(task)
-            }
-
-        } else {
-            Toast.makeText(
-                applicationContext,
-                "Empty not saved",
-                Toast.LENGTH_LONG
-            ).show()
-        }
     }
 }

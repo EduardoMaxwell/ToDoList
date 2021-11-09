@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskListFragment">
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.TaskListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_task_list">
+        <action
+            android:id="@+id/action_taskListFragment_to_taskDetailFragment"
+            app:destination="@id/taskDetailFragment" />
+        <action
+            android:id="@+id/action_taskListFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskDetailFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.TaskDetailFragment"
+        android:label="@string/task_detail_fragment_title"
+        tools:layout="@layout/fragment_task_detail">
+        <argument
+            android:name="task_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_taskDetailFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.AddTaskFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_add_task">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="task_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_addTaskFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment"
+            app:popUpTo="@id/taskListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+</navigation>

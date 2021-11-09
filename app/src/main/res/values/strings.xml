@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">ToDo List</string>
     <string name="title_tasks">My tasks</string>
+
     <string name="description_fab">Add new task</string>
+    <string name="description_fab_new_task">Add new task</string>
 
     <string name="edt_title_hint">Title <font color='#FF0000'>*</font></string>
     <string name="edt_description_hint">Description</string>
     <string name="edt_date_hint">Date <font color='#FF0000'>*</font></string>
     <string name="edt_hour_hint">Hour <font color='#FF0000'>*</font></string>
+    <string name="task_detail_fragment_title">Task Details</string>
 
     <string name="txt_create_task">Create task</string>
     <string name="txt_cancel">Cancel</string>
@@ -14,4 +17,5 @@
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
     <string name="txtEmptyTasks">Oops! No task here.\n Click on the button below to start.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
