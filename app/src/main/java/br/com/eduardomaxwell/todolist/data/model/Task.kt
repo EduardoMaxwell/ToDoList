@@ -19,4 +19,30 @@ class Task(
     val taskDate: String? = null,
     @ColumnInfo(name = "hour")
     val taskHour: String? = null
-) : Parcelable
+) : Parcelable {
+
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + taskTitle.hashCode()
+        result = 31 * result + taskDescription.hashCode()
+        result = 31 * result + (taskDate?.hashCode() ?: 0)
+        result = 31 * result + (taskHour?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Task
+
+        if (id != other.id) return false
+        if (taskTitle != other.taskTitle) return false
+        if (taskDescription != other.taskDescription) return false
+        if (taskDate != other.taskDate) return false
+        if (taskHour != other.taskHour) return false
+
+        return true
+    }
+}
