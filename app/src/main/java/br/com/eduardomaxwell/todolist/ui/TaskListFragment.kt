@@ -1,13 +1,14 @@
 package br.com.eduardomaxwell.todolist.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.FragmentTaskListBinding
@@ -55,11 +56,27 @@ class TaskListFragment : Fragment() {
                 )
             this.findNavController().navigate(action)
         }
+        hideFloatingActionButton()
+    }
+
+    private fun hideFloatingActionButton() {
+        binding.rvTasks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && binding.fabAddTask.visibility == View.VISIBLE) {
+                    binding.fabAddTask.hide()
+                } else if (dy < 0 && binding.fabAddTask.visibility != View.VISIBLE) {
+                    binding.fabAddTask.show()
+                }
+            }
+        })
     }
 
     private fun setUpRecyclerView(adapter: TaskAdapter) {
-        binding.rvTasks.layoutManager = LinearLayoutManager(this.context)
         binding.rvTasks.adapter = adapter
+        binding.rvTasks.addItemDecoration(
+            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
+        )
 
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             tasks.let {
