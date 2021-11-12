@@ -1,4 +1,4 @@
-package br.com.eduardomaxwell.todolist.ui
+package br.com.eduardomaxwell.todolist.ui.addtask
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
@@ -19,6 +19,7 @@ import br.com.eduardomaxwell.todolist.data.model.Task
 import br.com.eduardomaxwell.todolist.databinding.FragmentAddTaskBinding
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
 import br.com.eduardomaxwell.todolist.extensions.text
+import br.com.eduardomaxwell.todolist.ui.detailtask.TaskDetailFragmentArgs
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 import java.text.SimpleDateFormat

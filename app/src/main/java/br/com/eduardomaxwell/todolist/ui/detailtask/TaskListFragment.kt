@@ -1,4 +1,4 @@
-package br.com.eduardomaxwell.todolist.ui
+package br.com.eduardomaxwell.todolist.ui.detailtask
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.TaskApplication
 import br.com.eduardomaxwell.todolist.databinding.FragmentTaskListBinding
+import br.com.eduardomaxwell.todolist.ui.adapter.TaskAdapter
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 

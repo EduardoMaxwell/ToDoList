@@ -6,7 +6,7 @@
     app:startDestination="@id/taskListFragment">
     <fragment
         android:id="@+id/taskListFragment"
-        android:name="br.com.eduardomaxwell.todolist.ui.TaskListFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.detailtask.TaskListFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_task_list">
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/taskDetailFragment"
-        android:name="br.com.eduardomaxwell.todolist.ui.TaskDetailFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.detailtask.TaskDetailFragment"
         android:label="@string/task_detail_fragment_title"
         tools:layout="@layout/fragment_task_detail">
         <argument
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/addTaskFragment"
-        android:name="br.com.eduardomaxwell.todolist.ui.AddTaskFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.addtask.AddTaskFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_task">
         <argument

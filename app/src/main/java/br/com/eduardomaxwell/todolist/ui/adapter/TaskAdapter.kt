@@ -1,13 +1,11 @@
-package br.com.eduardomaxwell.todolist.ui
+package br.com.eduardomaxwell.todolist.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.databinding.ItemTaskBinding
 import br.com.eduardomaxwell.todolist.data.model.Task
 

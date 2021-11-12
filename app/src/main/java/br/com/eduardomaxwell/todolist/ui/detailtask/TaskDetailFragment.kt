@@ -1,4 +1,4 @@
-package br.com.eduardomaxwell.todolist.ui
+package br.com.eduardomaxwell.todolist.ui.detailtask
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
