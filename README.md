@@ -20,3 +20,7 @@ Além dos conceitos desenvolvidos nas aulas, o app emprega as seguintes tecnolog
 <img src="https://raw.githubusercontent.com/EduardoMaxwell/ToDoList/main/photo_6.jpg" width="180" height="320"/>|
 <img src="https://raw.githubusercontent.com/EduardoMaxwell/ToDoList/main/photo_7.jpg" width="180" height="320"/>
 <img src="https://raw.githubusercontent.com/EduardoMaxwell/ToDoList/main/photo_8.jpg" width="180" height="320"/>
+
+****
+  <a href="https://www.linkedin.com/in/eduardo-maxwell/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+****
