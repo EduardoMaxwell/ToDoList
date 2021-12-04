@@ -6,7 +6,7 @@
     app:startDestination="@id/taskListFragment">
     <fragment
         android:id="@+id/taskListFragment"
-        android:name="br.com.eduardomaxwell.todolist.ui.detailtask.TaskListFragment"
+        android:name="br.com.eduardomaxwell.todolist.ui.listtask.TaskListFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_task_list">
         <action

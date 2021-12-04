@@ -28,6 +28,9 @@ class TaskAdapter(private val onTaskClicked: (Task) -> Unit) :
         holder.bind(currentTask)
     }
 
+    fun getTaskAt(position: Int): Task{
+        return currentList[position]
+    }
     class TaskViewHolder(binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val title = binding.tvTitle

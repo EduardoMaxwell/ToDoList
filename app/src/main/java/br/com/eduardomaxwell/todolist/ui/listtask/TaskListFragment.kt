@@ -1,13 +1,15 @@
-package br.com.eduardomaxwell.todolist.ui.detailtask
+package br.com.eduardomaxwell.todolist.ui.listtask
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.TaskApplication
@@ -15,8 +17,10 @@ import br.com.eduardomaxwell.todolist.databinding.FragmentTaskListBinding
 import br.com.eduardomaxwell.todolist.ui.adapter.TaskAdapter
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
+import br.com.eduardomaxwell.todolist.utils.SwipeToDelete
 
 class TaskListFragment : Fragment() {
+
 
     private val viewModel: TaskViewModel by activityViewModels {
         TaskViewModelFactory(
@@ -38,7 +42,7 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TaskAdapter {
+        var adapter = TaskAdapter {
             val action =
                 TaskListFragmentDirections.actionTaskListFragmentToTaskDetailFragment(it.id)
             this.findNavController().navigate(action)
@@ -46,7 +50,6 @@ class TaskListFragment : Fragment() {
 
         setUpRecyclerView(adapter)
         setListeners()
-
     }
 
     private fun setListeners() {
@@ -75,9 +78,11 @@ class TaskListFragment : Fragment() {
 
     private fun setUpRecyclerView(adapter: TaskAdapter) {
         binding.rvTasks.adapter = adapter
-        binding.rvTasks.addItemDecoration(
+        /*binding.rvTasks.addItemDecoration(
             DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
-        )
+        )*/
+
+        swipeDelete(binding.rvTasks, adapter)
 
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             tasks.let {
@@ -91,6 +96,23 @@ class TaskListFragment : Fragment() {
                 adapter.submitList(it)
             }
         }
+    }
+
+    private fun swipeDelete(recyclerView: RecyclerView, adapter: TaskAdapter) {
+        val swipeCallback = object : SwipeToDelete() {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val itemPosition = viewHolder.adapterPosition
+
+                viewModel.deleteTask(adapter.getTaskAt(itemPosition))
+
+                adapter.notifyItemRemoved(viewHolder.adapterPosition)
+                Toast.makeText(requireContext(), "Task deletada", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
 }
