@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import br.com.eduardomaxwell.todolist.R
 import br.com.eduardomaxwell.todolist.TaskApplication
+import br.com.eduardomaxwell.todolist.data.model.Task
 import br.com.eduardomaxwell.todolist.databinding.FragmentTaskListBinding
 import br.com.eduardomaxwell.todolist.ui.adapter.TaskAdapter
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 import br.com.eduardomaxwell.todolist.utils.SwipeToDelete
+import com.google.android.material.snackbar.Snackbar
 
 class TaskListFragment : Fragment() {
 
@@ -42,7 +44,7 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var adapter = TaskAdapter {
+        val adapter = TaskAdapter {
             val action =
                 TaskListFragmentDirections.actionTaskListFragmentToTaskDetailFragment(it.id)
             this.findNavController().navigate(action)
@@ -102,17 +104,31 @@ class TaskListFragment : Fragment() {
         val swipeCallback = object : SwipeToDelete() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val itemPosition = viewHolder.adapterPosition
+                val task = adapter.getTaskAt(viewHolder.adapterPosition)
 
-                viewModel.deleteTask(adapter.getTaskAt(itemPosition))
-
+                viewModel.deleteTask(task)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
-                Toast.makeText(requireContext(), "Task deletada", Toast.LENGTH_SHORT).show()
+
+                restoreTaskDeleted(viewHolder.itemView, task)
+
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    private fun restoreTaskDeleted(view: View, task: Task) {
+        val snackbar = Snackbar.make(view, R.string.undo_snackbar, Snackbar.LENGTH_LONG)
+        snackbar.setAction(R.string.undo_snackbar) {
+            val title = task.taskTitle
+            val description = task.taskDescription
+            val priority = task.priority
+            val date = task.taskDate
+            val hour = task.taskHour
+            viewModel.addNewTask(title, description, date!!, hour!!, priority)
+        }
+        snackbar.show()
     }
 
 }

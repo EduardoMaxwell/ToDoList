@@ -1,6 +1,7 @@
 package br.com.eduardomaxwell.todolist.ui.viewmodel
 
 import androidx.lifecycle.*
+import br.com.eduardomaxwell.todolist.data.model.Priority
 import br.com.eduardomaxwell.todolist.data.model.Task
 import br.com.eduardomaxwell.todolist.data.repository.TaskRepository
 import kotlinx.coroutines.launch
@@ -23,9 +24,10 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         taskTitle: String,
         taskDescription: String,
         taskDate: String,
-        taskHour: String
+        taskHour: String,
+        priority: Priority
     ) {
-        val newTask = getNewTask(taskTitle, taskDescription, taskDate, taskHour)
+        val newTask = getNewTask(taskTitle, taskDescription, taskDate, taskHour, priority)
         insert(newTask)
     }
 
@@ -34,9 +36,10 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         taskTitle: String,
         taskDescription: String,
         taskDate: String,
-        taskHour: String
+        taskHour: String,
+        priority: Priority
     ) {
-        val updatedTask = getUpdatedTask(taskId, taskTitle, taskDescription, taskDate, taskHour)
+        val updatedTask = getUpdatedTask(taskId, taskTitle, taskDescription, taskDate, taskHour, priority)
         update(updatedTask)
     }
 
@@ -69,13 +72,15 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         taskTitle: String,
         taskDescription: String,
         taskDate: String,
-        taskHour: String
+        taskHour: String,
+        taskPriority: Priority
     ): Task {
         return Task(
             taskTitle = taskTitle,
             taskDescription = taskDescription,
             taskDate = taskDate,
-            taskHour = taskHour
+            taskHour = taskHour,
+            priority = taskPriority
         )
     }
 
@@ -84,14 +89,16 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         taskTitle: String,
         taskDescription: String,
         taskDate: String,
-        taskHour: String
+        taskHour: String,
+        taskPriority: Priority
     ): Task {
         return Task(
             id = taskId,
             taskTitle = taskTitle,
             taskDescription = taskDescription,
             taskDate = taskDate,
-            taskHour = taskHour
+            taskHour = taskHour,
+            priority = taskPriority
         )
     }
 

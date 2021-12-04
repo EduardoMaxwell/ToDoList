@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import br.com.eduardomaxwell.todolist.R
@@ -20,6 +21,7 @@ import br.com.eduardomaxwell.todolist.databinding.FragmentAddTaskBinding
 import br.com.eduardomaxwell.todolist.extensions.dateFormat
 import br.com.eduardomaxwell.todolist.extensions.text
 import br.com.eduardomaxwell.todolist.ui.detailtask.TaskDetailFragmentArgs
+import br.com.eduardomaxwell.todolist.ui.viewmodel.SharedViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModel
 import br.com.eduardomaxwell.todolist.ui.viewmodel.TaskViewModelFactory
 import java.text.SimpleDateFormat
@@ -29,6 +31,8 @@ class AddTaskFragment : Fragment() {
     private val viewModel: TaskViewModel by activityViewModels {
         TaskViewModelFactory((activity?.application as TaskApplication).repository)
     }
+
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     private var calendar: Calendar = Calendar.getInstance()
 
@@ -104,22 +108,28 @@ class AddTaskFragment : Fragment() {
                 binding.edtDate.text = calendar.time.dateFormat()
             }
 
-        DatePickerDialog(
+
+        val datePickerDialog = DatePickerDialog(
             requireContext(),
             dateSetListener,
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH),
-        ).show()
+        )
+        /*Desabilita datas anteriores a atual*/
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        datePickerDialog.show()
     }
 
     private fun addNewTask() {
+        val priority = binding.priorityColor.selectedItemPosition
         if (isEntryValid()) {
             viewModel.addNewTask(
                 binding.edtTitle.text,
                 binding.edtDescription.text,
                 binding.edtDate.text,
-                binding.edtHour.text
+                binding.edtHour.text,
+                sharedViewModel.parseIntToPriority(priority)
             )
         }
         val action = AddTaskFragmentDirections.actionAddTaskFragmentToTaskListFragment()
@@ -132,19 +142,22 @@ class AddTaskFragment : Fragment() {
             edtDescription.text = task.taskDescription
             edtDate.text = task.taskDate.toString()
             edtHour.text = task.taskHour.toString()
+
             btnCreateTask.setOnClickListener { updateTask() }
 
         }
     }
 
     private fun updateTask() {
+        val priority = this.binding.priorityColor.selectedItemPosition
         if (isEntryValid()) {
             viewModel.updateTask(
                 this.navigationArgs.taskId,
                 this.binding.edtTitle.text,
                 this.binding.edtDescription.text,
                 this.binding.edtDate.text,
-                this.binding.edtHour.text
+                this.binding.edtHour.text,
+                sharedViewModel.parseIntToPriority(priority)
             )
             val action = AddTaskFragmentDirections.actionAddTaskFragmentToTaskListFragment()
             this.findNavController().navigate(action)

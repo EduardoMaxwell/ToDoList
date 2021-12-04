@@ -47,6 +47,22 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/priorityColor"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/custom_input"
+        android:entries="@array/priorities"
+        android:paddingStart="8dp"
+        android:paddingTop="13dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="13dp"
+        app:layout_constraintEnd_toEndOf="@id/guidEnd"
+        app:layout_constraintStart_toStartOf="@id/guidStart"
+        app:layout_constraintTop_toBottomOf="@id/edtTitle" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edtDescription"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -56,7 +72,7 @@
         android:hint="@string/edt_description_hint"
         app:layout_constraintEnd_toEndOf="@id/guidEnd"
         app:layout_constraintStart_toStartOf="@id/guidStart"
-        app:layout_constraintTop_toBottomOf="@id/edtTitle">
+        app:layout_constraintTop_toBottomOf="@id/priorityColor">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "tb_task")
 @Parcelize
-class Task(
+data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "title")
@@ -18,7 +18,9 @@ class Task(
     @ColumnInfo(name = "date")
     val taskDate: String? = null,
     @ColumnInfo(name = "hour")
-    val taskHour: String? = null
+    val taskHour: String? = null,
+    @ColumnInfo(name = "priority")
+    val priority: Priority
 ) : Parcelable {
 
 
